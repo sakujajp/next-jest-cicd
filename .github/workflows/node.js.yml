@@ -24,8 +24,10 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+          path: ~/.npm # Directory to cache (e.g., node_modules, .next/cache)
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} # Unique key based on OS and lock file hash
+          restore-keys: |
+            ${{ runner.os }}-node- # Fallback to the most recent cache for the OS
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
